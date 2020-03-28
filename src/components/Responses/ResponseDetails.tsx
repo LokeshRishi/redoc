@@ -12,7 +12,7 @@ import { ResponseHeaders } from './ResponseHeaders';
 
 export class ResponseDetails extends React.PureComponent<{ response: ResponseModel }> {
   render() {
-    const { description, headers, content } = this.props.response;
+    const { description, headers, content, responseCodes } = this.props.response;
     return (
       <>
         {description && <Markdown source={description} />}
@@ -22,6 +22,7 @@ export class ResponseDetails extends React.PureComponent<{ response: ResponseMod
             return <Schema skipWriteOnly={true} key="schema" schema={schema} />;
           }}
         </MediaTypesSwitch>
+        {this.errorCodeContainer(responseCodes)}
       </>
     );
   }
@@ -33,4 +34,35 @@ export class ResponseDetails extends React.PureComponent<{ response: ResponseMod
       </UnderlinedHeader>
     );
   };
+
+  private errorCodeContainer(responseCodes) {
+    if (responseCodes && responseCodes.errors) {
+      return (<>
+        <UnderlinedHeader key="header">
+          Response Codes
+        </UnderlinedHeader>
+        <div className="response-codes-container">
+          <table className="response-codes">
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th>Domain</th>
+                <th>Category</th>
+                <th>Meaning</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                Object.keys(responseCodes.errors).map(function (key) {
+                  return <tr><td>{key}</td> <td>{responseCodes.errors[key].domain}</td> <td>{responseCodes.errors[key].category}</td> <td>{responseCodes.errors[key].description}</td></tr>;
+                })
+              }
+            </tbody>
+            <tfoot>
+            </tfoot>
+          </table>
+        </div>
+      </>);
+    }
+  }
 }

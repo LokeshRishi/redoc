@@ -7,6 +7,7 @@ import { OpenAPIParser } from '../OpenAPIParser';
 import { RedocNormalizedOptions } from '../RedocNormalizedOptions';
 import { FieldModel } from './Field';
 import { MediaContentModel } from './MediaContent';
+import { ResponseCodes } from './ResponseCodes';
 
 export class ResponseModel {
   @observable
@@ -18,6 +19,7 @@ export class ResponseModel {
   description: string;
   type: string;
   headers: FieldModel[] = [];
+  responseCodes: ResponseCodes;
 
   constructor(
     parser: OpenAPIParser,
@@ -41,6 +43,10 @@ export class ResponseModel {
     } else {
       this.summary = info.description || '';
       this.description = '';
+    }
+
+    if (info['x-response-codes'] !== undefined) {
+      this.responseCodes = info['x-response-codes'];
     }
 
     this.type = getStatusCodeType(code, defaultAsError);

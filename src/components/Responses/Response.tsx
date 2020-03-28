@@ -12,11 +12,11 @@ export class ResponseView extends React.Component<{ response: ResponseModel }> {
   };
 
   render() {
-    const { headers, type, summary, description, code, expanded, content } = this.props.response;
+    const { headers, type, summary, description, code, expanded, content, responseCodes } = this.props.response;
     const mimes =
       content === undefined ? [] : content.mediaTypes.filter(mime => mime.schema !== undefined);
 
-    const empty = headers.length === 0 && mimes.length === 0 && !description;
+    const empty = headers.length === 0 && mimes.length === 0 && !description && !responseCodes;
 
     return (
       <div>
